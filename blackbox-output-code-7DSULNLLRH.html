@@ -1,0 +1,529 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>StickerHub - Premium Stickers</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            line-height: 1.6;
+            color: #333;
+            overflow-x: hidden;
+        }
+
+        /* Header */
+        header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 1rem 0;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        nav {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 2rem;
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: bold;
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+        }
+
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            transition: opacity 0.3s;
+        }
+
+        .nav-links a:hover {
+            opacity: 0.8;
+        }
+
+        .cart-btn {
+            background: rgba(255,255,255,0.2);
+            border: none;
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s;
+        }
+
+        .cart-btn:hover {
+            background: rgba(255,255,255,0.3);
+        }
+
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            padding: 120px 2rem 80px;
+            text-align: center;
+        }
+
+        .hero h1 {
+            font-size: 3.5rem;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero p {
+            font-size: 1.3rem;
+            margin-bottom: 2rem;
+            color: #666;
+        }
+
+        .cta-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 1rem 2.5rem;
+            border: none;
+            border-radius: 50px;
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: transform 0.3s, box-shadow 0.3s;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .cta-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.4);
+        }
+
+        /* Stickers Grid */
+        .stickers-section {
+            padding: 80px 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 2.5rem;
+            margin-bottom: 3rem;
+            color: #333;
+        }
+
+        .stickers-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-bottom: 4rem;
+        }
+
+        .sticker-card {
+            background: white;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .sticker-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+        }
+
+        .sticker-image {
+            width: 100%;
+            height: 250px;
+            background-size: cover;
+            background-position: center;
+            position: relative;
+        }
+
+        .sticker-image::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.3);
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .sticker-card:hover .sticker-image::after {
+            opacity: 1;
+        }
+
+        .sticker-info {
+            padding: 1.5rem;
+        }
+
+        .sticker-name {
+            font-size: 1.3rem;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+            color: #333;
+        }
+
+        .sticker-price {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #667eea;
+            margin-bottom: 1rem;
+        }
+
+        .add-to-cart {
+            width: 100%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 0.8rem;
+            border-radius: 10px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .add-to-cart:hover {
+            transform: scale(1.05);
+        }
+
+        /* Features */
+        .features {
+            padding: 80px 2rem;
+            background: #f8f9ff;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .feature-card {
+            text-align: center;
+            padding: 2rem;
+        }
+
+        .feature-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        /* Footer */
+        footer {
+            background: #333;
+            color: white;
+            text-align: center;
+            padding: 3rem 2rem 1rem;
+        }
+
+        .social-links {
+            margin: 2rem 0;
+        }
+
+        .social-links a {
+            color: white;
+            font-size: 1.5rem;
+            margin: 0 1rem;
+            transition: color 0.3s;
+        }
+
+        .social-links a:hover {
+            color: #667eea;
+        }
+
+        /* Cart Modal */
+        .cart-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 2000;
+            backdrop-filter: blur(5px);
+        }
+
+        .cart-content {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            padding: 2rem;
+            border-radius: 20px;
+            max-width: 500px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        .close-cart {
+            position: absolute;
+            top: 1rem;
+            right: 1.5rem;
+            font-size: 2rem;
+            cursor: pointer;
+            color: #666;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+
+            .stickers-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #667eea;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <nav>
+            <div class="logo">🛍️ StickerHub</div>
+            <ul class="nav-links">
+                <li><a href="#home">Home</a></li>
+                <li><a href="#stickers">Stickers</a></li>
+                <li><a href="#about">About</a></li>
+                <li><a href="#contact">Contact</a></li>
+            </ul>
+            <button class="cart-btn" onclick="openCart()">🛒 Cart (0)</button>
+        </nav>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero" id="home">
+        <h1>Premium Stickers Collection</h1>
+        <p>Discover unique, high-quality stickers for every occasion. 
+           Express yourself with our exclusive designs!</p>
+        <a href="#stickers" class="cta-btn">Shop Now</a>
+    </section>
+
+    <!-- Stickers Section -->
+    <section class="stickers-section" id="stickers">
+        <h2 class="section-title">Featured Stickers</h2>
+        <div class="stickers-grid">
+            <div class="sticker-card" onclick="addToCart('Cute Cat', 4.99, 'cat-sticker.jpg')">
+                <div class="sticker-image" style="background-image: linear-gradient(45deg, #ff9a9e, #fecfef); display: flex; align-items: center; justify-content: center; font-size: 4rem;">
+                    🐱
+                </div>
+                <div class="sticker-info">
+                    <div class="sticker-name">Cute Cat Sticker</div>
+                    <div class="sticker-price">$4.99</div>
+                    <button class="add-to-cart">Add to Cart</button>
+                </div>
+            </div>
+
+            <div class="sticker-card" onclick="addToCart('Rocket Ship', 5.99, 'rocket-sticker.jpg')">
+                <div class="sticker-image" style="background-image: linear-gradient(45deg, #a8edea, #fed6e3); display: flex; align-items: center; justify-content: center; font-size: 4rem;">
+                    🚀
+                </div>
+                <div class="sticker-info">
+                    <div class="sticker-name">Rocket Ship</div>
+                    <div class="sticker-price">$5.99</div>
+                    <button class="add-to-cart">Add to Cart</button>
+                </div>
+            </div>
+
+            <div class="sticker-card" onclick="addToCart('Pizza Slice', 3.99, 'pizza-sticker.jpg')">
+                <div class="sticker-image" style="background-image: linear-gradient(45deg, #ffecd2, #fcb69f); display: flex; align-items: center; justify-content: center; font-size: 4rem;">
+                    🍕
+                </div>
+                <div class="sticker-info">
+                    <div class="sticker-name">Pizza Slice</div>
+                    <div class="sticker-price">$3.99</div>
+                    <button class="add-to-cart">Add to Cart</button>
+                </div>
+            </div>
+
+            <div class="sticker-card" onclick="addToCart('Sunflower', 4.49, 'sunflower-sticker.jpg')">
+                <div class="sticker-image" style="background-image: linear-gradient(45deg, #f093fb, #f5576c); display: flex; align-items: center; justify-content: center; font-size: 4rem;">
+                    🌻
+                </div>
+                <div class="sticker-info">
+                    <div class="sticker-name">Sunflower</div>
+                    <div class="sticker-price">$4.49</div>
+                    <button class="add-to-cart">Add to Cart</button>
+                </div>
+            </div>
+
+            <div class="sticker-card" onclick="addToCart('Gaming Controller', 6.99, 'gaming-sticker.jpg')">
+                <div class="sticker-image" style="background-image: linear-gradient(45deg, #4facfe, #00f2fe); display: flex; align-items: center; justify-content: center; font-size: 4rem;">
+                    🎮
+                </div>
+                <div class="sticker-info">
+                    <div class="sticker-name">Gaming Controller</div>
+                    <div class="sticker-price">$6.99</div>
+                    <button class="add-to-cart">Add to Cart</button>
+                </div>
+            </div>
+
+            <div class="sticker-card" onclick="addToCart('Coffee Cup', 3.49, 'coffee-sticker.jpg')">
+                <div class="sticker-image" style="background-image: linear-gradient(45deg, #fa709a, #fee140); display: flex; align-items: center; justify-content: center; font-size: 4rem;">
+                    ☕
+                </div>
+                <div class="sticker-info">
+                    <div class="sticker-name">Coffee Cup</div>
+                    <div class="sticker-price">$3.49</div>
+                    <button class="add-to-cart">Add to Cart</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="features">
+        <div class="features-grid">
+            <div class="feature-card">
+                <div class="feature-icon">⚡</div>
+                <h3>Fast Shipping</h3>
+                <p>Order today, get it tomorrow!</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">🛡️️</div>
+                <h3>Quality Guaranteed</h3>
+                <p>Premium vinyl stickers that last</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">💰</div>
+                <h3>Best Prices</h3>
+                <p>Affordable stickers for everyone</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">⭐</div>
+                <h3>Customer Love</h3>
+                <p>4.9/5 rating from 10K+ customers</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Cart Modal -->
+    <div class="cart-modal" id="cartModal">
+        <div class="cart-content">
+            <span class="close-cart" onclick="closeCart()">&times;</span>
+            <h2>🛒 Shopping Cart</h2>
+            <div id="cartItems"></div>
+            <div style="margin-top: 2rem; padding-top: 2rem; border-top: 1px solid #eee;">
+                <div style="display: flex; justify-content: space-between; font-size: 1.3rem; font-weight: bold;">
+                    <span>Total:</span>
+                    <span id="cartTotal">$0.00</span>
+                </div>
+                <button style="width: 100%; background: #28a745; color: white; border: none; padding: 1rem; border-radius: 10px; font-size: 1.1rem; margin-top: 1rem; cursor: pointer;">
+                    Checkout
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <div class="social-links">
+            <a href="#">📘</a>
+            <a href="#">📷</a>
+            <a href="#">🐦</a>
+            <a href="#">💼</a>
+        </div>
+        <p>&copy; 2024 StickerHub. All rights reserved. | Made with ❤️</p>
+    </footer>
+
+    <script>
+        let cart = [];
+        let cartCount = 0;
+
+        function addToCart(name, price, image) {
+            cart.push({ name, price, image });
+            cartCount++;
+            updateCartCount();
+            alert(`${name} added to cart! 🎉`);
+        }
+
+        function updateCartCount() {
+            const cartBtn = document.querySelector('.cart-btn');
+            cartBtn.textContent = `🛒 Cart (${cartCount})`;
+        }
+
+        function openCart() {
+            document.getElementById('cartModal').style.display = 'block';
+            displayCartItems();
+        }
+
+        function closeCart() {
+            document.getElementById('cartModal').style.display = 'none';
+        }
+
+        function displayCartItems() {
+            const cartItems = document.getElementById('cartItems');
+            const total = cart.reduce((sum, item) => sum + item.price, 0);
+            
+            document.getElementById('cartTotal').textContent = `$${total.toFixed(2)}`;
+
+            if (cart.length === 0) {
+                cartItems.innerHTML = '<p>Your cart is empty 😢</p>';
+                return;
+            }
+
+            cartItems.innerHTML = cart.map((item, index) => `
+                <div style="display: flex; justify-content: space-between; align-items: center; padding: 1rem 0; border-bottom: 1px solid #eee;">
+                    <div>
+                        <strong>${item.name}</strong><br>
+                        <small>$${item.price}</small>
+                    </div>
+                    <div>
+                        <button onclick="removeFromCart(${index})" style="background: #dc3545; color: white; border: none; padding: 0.5rem; border-radius: 5px; cursor: pointer;">Remove</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+       
